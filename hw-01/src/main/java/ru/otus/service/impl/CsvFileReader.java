@@ -6,7 +6,6 @@ import ru.otus.model.Question;
 import ru.otus.service.api.QuestionsReader;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,7 @@ public class CsvFileReader implements QuestionsReader {
              BufferedReader csvFileReader = new BufferedReader(inputStreamReader)
         ) {
             answersByQuestions = parseCsvFile(csvFileReader);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             throw new CsvParseException(String.format("Cannot parse CSV file %s", fileName), e);
         }
 
@@ -40,7 +39,7 @@ public class CsvFileReader implements QuestionsReader {
                 .collect(Collectors.toList());
     }
 
-    private Map<String, List<String>> parseCsvFile(BufferedReader csvFileReader) throws IOException, URISyntaxException {
+    private Map<String, List<String>> parseCsvFile(BufferedReader csvFileReader) throws IOException {
         Map<String, List<String>> answersByQuestions = new LinkedHashMap<>();
         String line;
         String lastParsedQuestion = null;
