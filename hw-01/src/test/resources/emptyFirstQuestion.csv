@@ -1,0 +1,16 @@
+;SOFT
+;GRASP
+;KISS
+;IGNI
+;DRY
+What tags must be present in a Maven project?;<groupId>, <name>, <dependencies>
+;<name>, <properties>, <dependencies>
+;<groupId>, <artifactId>, <version>
+What is the operator NEW used for?;To create a new variable.
+;To declare a new class.
+;To create an instance of a class.
+What does the word extends mean?;That this class inherits from another.
+;That it is an additional class module that extends its properties.
+;That two classes do the same thing.
+;That it is the largest class in the program.
+What is checked and unchecked exception?;
