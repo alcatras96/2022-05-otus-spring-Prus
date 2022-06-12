@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.model.Question;
 import ru.otus.service.api.AnswerValidator;
-import ru.otus.service.api.ChosenOptionsByUserParser;
 import ru.otus.service.api.StudentExamDecisionManager;
 import ru.otus.service.api.StudentsTestingService;
 import ru.otus.service.io.api.OutputService;
@@ -20,7 +19,6 @@ public class StudentsTestingServiceImpl implements StudentsTestingService {
     private final OutputService<Question> questionsOutputService;
     private final QuestionsReader questionsReader;
     private final UserInputService userInputService;
-    private final ChosenOptionsByUserParser chosenOptionsByUserParser;
     private final AnswerValidator answerValidator;
     private final StudentExamDecisionManager studentExamDecisionManager;
 
@@ -30,24 +28,19 @@ public class StudentsTestingServiceImpl implements StudentsTestingService {
 
         var correctlyAnsweredQuestionsCount = questions.stream()
                 .peek(questionsOutputService::output)
-                .filter(this::askUserInputAndValidateAnswers)
+                .filter(this::askAndValidateUserAnswer)
                 .count();
 
         studentExamDecisionManager.decide(toIntExact(correctlyAnsweredQuestionsCount));
     }
 
-    private boolean askUserInputAndValidateAnswers(Question question) {
-        boolean isValidAnswers;
+    private boolean askAndValidateUserAnswer(Question question) {
+        String userAnswer = askUserAnswer(question);
+        return answerValidator.isValidAnswer(question, userAnswer);
+    }
 
-        if (question.withoutAnswerOptions()) {
-            var userAnswer = userInputService.readStringWithPrompt("Please write your answer.");
-            isValidAnswers = answerValidator.isValidAnswer(question, userAnswer);
-        } else {
-            var userAnswer = userInputService.readStringWithPrompt("Please write the correct options, separating them with a space.");
-            var chosenOptionsByUser = chosenOptionsByUserParser.parse(userAnswer);
-            isValidAnswers = answerValidator.isValidAnswerOptions(question, chosenOptionsByUser);
-        }
-
-        return isValidAnswers;
+    private String askUserAnswer(Question question) {
+        return userInputService.readStringWithPrompt(question.withoutAnswerOptions()
+                ? "Please write your answer." : "Please write the correct options, separating them with a space.");
     }
 }

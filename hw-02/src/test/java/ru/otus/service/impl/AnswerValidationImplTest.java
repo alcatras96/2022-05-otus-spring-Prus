@@ -6,9 +6,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
+import ru.otus.service.api.ChosenOptionsByUserParser;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,9 +18,14 @@ import java.util.stream.Stream;
 import static java.util.Collections.singletonList;
 import static java.util.List.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class AnswerValidationImplTest {
+
+    @Mock
+    ChosenOptionsByUserParser chosenOptionsByUserParser;
 
     @InjectMocks
     AnswerValidationImpl answerValidator;
@@ -27,7 +34,8 @@ class AnswerValidationImplTest {
     @ParameterizedTest
     @MethodSource("provideArgumentsForShouldValidateAnswerOptionsFromUserCorrectly")
     void shouldValidateAnswerOptionsFromUserCorrectly(List<Integer> answerOptions, boolean correct) {
-        assertEquals(answerValidator.isValidAnswerOptions(getQuestionWithAnswerOptions(), answerOptions), correct);
+        given(chosenOptionsByUserParser.parse(any())).willReturn(answerOptions);
+        assertEquals(answerValidator.isValidAnswer(getQuestionWithAnswerOptions(), any()), correct);
     }
 
     @DisplayName("Should validate answer from user correctly.")
