@@ -20,4 +20,8 @@ public record Question(String value, List<Answer> answers) {
     public List<Answer> getCorrectAnswers() {
         return answers.stream().filter(Answer::correct).collect(Collectors.toList());
     }
+
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
 }
