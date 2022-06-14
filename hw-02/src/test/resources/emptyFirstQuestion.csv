@@ -1,0 +1,16 @@
+;SOFT;false
+;GRASP;
+;KISS;
+;IGNI;false
+;DRY;
+What tags must be present in a Maven project?;<groupId>, <name>, <dependencies>;false
+;<name>, <properties>, <dependencies>;false
+;<groupId>, <artifactId>, <version>;
+What is the operator NEW used for?;To create a new variable.;false
+;To declare a new class.;false
+;To create an instance of a class.;
+What does the word extends mean?;That this class inherits from another.;
+;That it is an additional class module that extends its properties.;false
+;That two classes do the same thing.;false
+;That it is the largest class in the program.;false
+How is OOP stands for?;Object Oriented Programming;
