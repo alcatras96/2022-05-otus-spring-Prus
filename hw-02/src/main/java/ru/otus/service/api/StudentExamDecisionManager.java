@@ -1,6 +1,8 @@
 package ru.otus.service.api;
 
+import ru.otus.model.Student;
+
 public interface StudentExamDecisionManager {
 
-    void decide(int correctlyAnsweredQuestions);
+    void decide(Student student);
 }

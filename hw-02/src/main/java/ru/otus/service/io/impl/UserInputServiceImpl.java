@@ -24,4 +24,9 @@ public class UserInputServiceImpl implements UserInputService {
         outputService.output(prompt);
         return input.nextLine();
     }
+
+    @Override
+    public String readString() {
+        return input.nextLine();
+    }
 }
