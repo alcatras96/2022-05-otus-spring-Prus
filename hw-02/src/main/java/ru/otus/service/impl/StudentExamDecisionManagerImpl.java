@@ -2,6 +2,7 @@ package ru.otus.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.otus.model.Student;
 import ru.otus.service.api.StudentExamDecisionManager;
 import ru.otus.service.io.api.OutputService;
 
@@ -18,8 +19,10 @@ public class StudentExamDecisionManagerImpl implements StudentExamDecisionManage
     }
 
     @Override
-    public void decide(int correctlyAnsweredQuestions) {
-        outputService.output(String.format("You answered %s questions correctly.", correctlyAnsweredQuestions));
-        outputService.output(correctlyAnsweredQuestions < minimumNumberOfCorrectAnswers ? "You didn't pass the exam" : "You passed the exam");
+    public void decide(Student student) {
+        int correctlyAnsweredQuestionsCount = student.getCorrectlyAnsweredQuestionsCount();
+        outputService.output(String.format("You answered %s questions correctly.", correctlyAnsweredQuestionsCount));
+        outputService.output(correctlyAnsweredQuestionsCount < minimumNumberOfCorrectAnswers ?
+                "You didn't pass the exam" : "You passed the exam");
     }
 }

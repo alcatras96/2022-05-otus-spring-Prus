@@ -5,15 +5,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.otus.model.Student;
 import ru.otus.service.api.StudentExamDecisionManager;
 import ru.otus.service.io.api.OutputService;
 
 import java.util.stream.Stream;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class StudentExamDecisionManagerImplTest {
@@ -26,7 +27,7 @@ class StudentExamDecisionManagerImplTest {
     @MethodSource("provideArgumentsForShouldOutputCorrectMessage")
     void shouldOutputCorrectMessage(String expectedMessage, int answeredQuestions, int minimumNumberOfCorrectAnswers) {
         StudentExamDecisionManager decisionManager = new StudentExamDecisionManagerImpl(outputService, minimumNumberOfCorrectAnswers);
-        decisionManager.decide(answeredQuestions);
+        decisionManager.decide(new Student("Ivan Ivanov", answeredQuestions));
 
         verify(outputService, times(1)).output(expectedMessage);
     }
