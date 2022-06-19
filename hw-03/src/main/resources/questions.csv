@@ -1,0 +1,16 @@
+csv.question.development.principles;csv.answer.option.1.development.principles;false
+;csv.answer.option.2.development.principles;
+;csv.answer.option.3.development.principles;
+;csv.answer.option.4.development.principles;false
+;csv.answer.option.5.development.principles;
+csv.question.tags.in.maven;csv.answer.option.1.tags.in.maven;false
+;csv.answer.option.2.tags.in.maven;false
+;csv.answer.option.3.tags.in.maven;
+csv.question.operator.new;csv.answer.option.1.operator.new;false
+;csv.answer.option.2.operator.new;false
+;csv.answer.option.3.operator.new;
+csv.question.word.extends;csv.answer.option.1.word.extends;
+;csv.answer.option.2.word.extends;false
+;csv.answer.option.3.word.extends;false
+;csv.answer.option.4.word.extends;false
+csv.question.oop.stands.for;csv.answer.oop.stands.for;

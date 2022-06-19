@@ -24,5 +24,6 @@
     <modules>
         <module>hw-01</module>
         <module>hw-02</module>
+        <module>hw-03</module>
     </modules>
 </project>
