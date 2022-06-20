@@ -9,5 +9,5 @@ public interface ExaminerService {
 
     void ask(Student student, List<Question> question);
 
-    void decide(Student student);
+    void announceResults(Student student);
 }

@@ -9,6 +9,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class Student {
 
-    private final String firstAndLastName;
+    private final String name;
+    private final String surname;
     private int correctlyAnsweredQuestionsCount;
+
+    public String getFirstAndLastName(){
+        return name + " " + surname;
+    }
 }

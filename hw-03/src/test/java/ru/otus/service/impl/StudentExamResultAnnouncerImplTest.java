@@ -7,12 +7,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import ru.otus.configuration.QuestionsProperties;
 import ru.otus.model.Student;
 import ru.otus.service.api.I18nService;
-import ru.otus.service.api.StudentExamDecisionManager;
+import ru.otus.service.api.StudentExamResultAnnouncer;
 import ru.otus.service.io.api.OutputService;
 
 import java.util.stream.Stream;
@@ -22,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class StudentExamDecisionManagerImplTest {
+class StudentExamResultAnnouncerImplTest {
 
     @MockBean
     QuestionsProperties properties;
@@ -34,7 +32,7 @@ class StudentExamDecisionManagerImplTest {
     OutputService<String> outputService;
 
     @Autowired
-    StudentExamDecisionManager decisionManager;
+    StudentExamResultAnnouncer decisionManager;
 
     @DisplayName("Should print correct messages.")
     @ParameterizedTest
@@ -43,7 +41,7 @@ class StudentExamDecisionManagerImplTest {
         when(i18nService.getMessage(anyString())).then(returnsFirstArg());
         when(properties.getMinimumNumberOfCorrectAnswers()).thenReturn(3);
 
-        decisionManager.decide(new Student("Ivan Ivanov", answeredQuestions));
+        decisionManager.announce(new Student("Ivan", "Ivanov", answeredQuestions));
 
         verify(outputService, times(1)).output(expectedMessage);
     }

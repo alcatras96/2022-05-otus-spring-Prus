@@ -22,6 +22,6 @@ public class StudentsTestingServiceImpl implements StudentsTestingService {
 
         var questions = questionsProvider.get();
         examinerService.ask(student, questions);
-        examinerService.decide(student);
+        examinerService.announceResults(student);
     }
 }

@@ -32,8 +32,10 @@ class StudentLoginServiceImplTest {
     @Test
     @DisplayName("Should login student correctly.")
     void shouldLoginStudentCorrectly() {
-        given(userInputService.readString()).willReturn("Ivan Ivanov");
+        given(userInputService.readString())
+                .willReturn("Ivan")
+                .willReturn("Ivanov");
 
-        assertEquals(studentLoginService.login(), new Student("Ivan Ivanov"));
+        assertEquals(studentLoginService.login(), new Student("Ivan", "Ivanov"));
     }
 }

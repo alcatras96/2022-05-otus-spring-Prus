@@ -7,7 +7,7 @@ import ru.otus.model.Student;
 import ru.otus.service.api.AnswerValidator;
 import ru.otus.service.api.ExaminerService;
 import ru.otus.service.api.I18nService;
-import ru.otus.service.api.StudentExamDecisionManager;
+import ru.otus.service.api.StudentExamResultAnnouncer;
 import ru.otus.service.io.api.OutputService;
 import ru.otus.service.io.api.UserInputService;
 
@@ -22,7 +22,7 @@ public class ExaminerServiceImpl implements ExaminerService {
     private final OutputService<Question> questionsOutputService;
     private final UserInputService userInputService;
     private final AnswerValidator answerValidator;
-    private final StudentExamDecisionManager studentExamDecisionManager;
+    private final StudentExamResultAnnouncer studentExamResultAnnouncer;
     private final I18nService i18nService;
 
     @Override
@@ -35,8 +35,8 @@ public class ExaminerServiceImpl implements ExaminerService {
     }
 
     @Override
-    public void decide(Student student) {
-        studentExamDecisionManager.decide(student);
+    public void announceResults(Student student) {
+        studentExamResultAnnouncer.announce(student);
     }
 
     private boolean askAndValidateAnswer(Question question) {

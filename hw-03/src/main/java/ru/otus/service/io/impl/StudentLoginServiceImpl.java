@@ -18,10 +18,17 @@ public class StudentLoginServiceImpl implements StudentLoginService {
 
     @Override
     public Student login() {
-        outputService.output(i18nService.getMessage("enter.your.name.and.surname"));
-        String firstAndLastName = userInputService.readString();
+        var name = askStudentForInformation("enter.your.name");
+        var surname = askStudentForInformation("enter.your.surname");
+        var student = new Student(name, surname);
 
-        outputService.output(i18nService.getMessage("greeting", firstAndLastName));
-        return new Student(firstAndLastName);
+        outputService.output(i18nService.getMessage("greeting", student.getFirstAndLastName()));
+
+        return student;
+    }
+
+    private String askStudentForInformation(String messageToAsk) {
+        outputService.output(i18nService.getMessage(messageToAsk));
+        return userInputService.readString();
     }
 }
