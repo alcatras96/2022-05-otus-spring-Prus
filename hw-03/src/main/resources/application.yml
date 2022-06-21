@@ -1,0 +1,3 @@
+questions:
+  file-name: questions.csv
+  minimum-number-of-correct-answers: 3
