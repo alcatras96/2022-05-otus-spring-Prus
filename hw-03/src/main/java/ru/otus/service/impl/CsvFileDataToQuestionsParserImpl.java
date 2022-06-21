@@ -25,7 +25,7 @@ public class CsvFileDataToQuestionsParserImpl implements CsvFileDataToQuestionsP
     private final I18nService i18nService;
 
     @Override
-    public List<Question> parse(List<String> lines) {
+    public List<Question> parse(List<String> lines) throws CsvParseException {
         var answersByQuestions = new LinkedHashMap<String, Question>();
 
         String lastParsedQuestionValue = null;

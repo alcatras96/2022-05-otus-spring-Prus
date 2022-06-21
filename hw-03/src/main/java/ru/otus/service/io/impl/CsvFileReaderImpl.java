@@ -1,7 +1,6 @@
 package ru.otus.service.io.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.configuration.QuestionsProperties;
 import ru.otus.exception.CsvReadException;
@@ -23,7 +22,7 @@ public class CsvFileReaderImpl implements CsvFileReader {
     private final QuestionsProperties properties;
 
     @Override
-    public List<String> readLines() {
+    public List<String> readLines() throws CsvReadException {
         try (var inputStream = getCsvFileInputStream();
              var inputStreamReader = new InputStreamReader(inputStream);
              var csvFileReader = new BufferedReader(inputStreamReader)

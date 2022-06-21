@@ -1,6 +1,6 @@
 package ru.otus.exception;
 
-public class CsvReadException extends RuntimeException {
+public class CsvReadException extends CsvException {
 
     public CsvReadException(String message) {
         super(message);
