@@ -22,10 +22,10 @@ class ApplicationControllerTest {
     @Autowired
     private Shell shell;
 
-    @DisplayName("Should return CommandNotCurrentlyAvailable object when user doesn't login after test command evaluated")
+    @DisplayName("Should return CommandNotCurrentlyAvailable object when user doesn't login after test command executed")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
-    void shouldReturnCommandNotCurrentlyAvailableObjectWhenUserDoesNotLoginAfterTestCommandEvaluated() {
+    void shouldReturnCommandNotCurrentlyAvailableObjectWhenUserDoesNotLoginAfterTestCommandExecuted() {
         assertThat(shell.evaluate(() -> "test")).isInstanceOf(CommandNotCurrentlyAvailable.class);
     }
 }
