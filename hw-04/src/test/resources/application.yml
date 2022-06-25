@@ -1,0 +1,8 @@
+spring:
+  main:
+    banner-mode: "off"
+    lazy-initialization: true
+    allow-circular-references: true
+  shell:
+    interactive:
+      enabled: false

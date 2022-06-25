@@ -1,0 +1,6 @@
+questions:
+  file-name: questions.csv
+  minimum-number-of-correct-answers: 3
+spring:
+  main:
+    allow-circular-references: true
