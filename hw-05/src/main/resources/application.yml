@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:libraryDB
+  flyway:
+    enabled: true
+  main:
+    allow-circular-references: true
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core: TRACE
