@@ -198,11 +198,12 @@ public class BookDaoJdbc implements BookDao {
                 .stream()
                 .collect(toMap(Genre::getId, Function.identity()));
 
-        relations.forEach(relation ->
-                requireNonNull(books)
-                        .get(relation.getBookId())
-                        .getGenres()
-                        .add(genresMap.get(relation.getGenreId()))
-        );
+        relations.forEach(relation -> {
+            Book book = books.get(relation.getBookId());
+            Genre genre = genresMap.get(relation.getGenreId());
+            if (book != null && genre != null) {
+                book.getGenres().add(genre);
+            }
+        });
     }
 }
