@@ -1,7 +1,9 @@
 package ru.otus.dao.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.JdbcUpdateAffectedIncorrectNumberOfRowsException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -16,15 +18,17 @@ import ru.otus.domain.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 
 import static java.util.Collections.singletonMap;
 import static java.util.Map.of;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 @Service
@@ -46,6 +50,39 @@ public class BookDaoJdbc implements BookDao {
 
     }
 
+    private static class BooksWilAllDataResultSetExtractor implements ResultSetExtractor<Map<Long, Book>> {
+
+        @Override
+        public Map<Long, Book> extractData(ResultSet rs) throws SQLException, DataAccessException {
+            Map<Long, Book> booksMap = new HashMap<>();
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                Book book = booksMap.get(id);
+                if (book == null) {
+                    book = new Book(id, rs.getString("name"), rs.getLong("author_id"));
+                    booksMap.put(book.getId(), book);
+                }
+                book.getGenres()
+                        .add(new Genre(rs.getLong("genre_id"), rs.getString("genre_name")));
+            }
+            return booksMap;
+        }
+    }
+
+    private static class BooksResultSetExtractor implements ResultSetExtractor<Map<Long, Book>> {
+
+        @Override
+        public Map<Long, Book> extractData(ResultSet rs) throws SQLException, DataAccessException {
+            Map<Long, Book> books = new HashMap<>();
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                Book book = new Book(id, rs.getString("name"), rs.getLong("author_id"));
+                books.put(id, book);
+            }
+            return books;
+        }
+    }
+
     private static class BookGenreMapper implements RowMapper<BookGenreRelation> {
 
         @Override
@@ -60,7 +97,7 @@ public class BookDaoJdbc implements BookDao {
     public Long insert(Book book) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcOperations.update("insert into books (name, author_id) values (:name, :author_id)",
-                new MapSqlParameterSource(of("name", book.getName(), "author_id", book.getAuthorId())), keyHolder);
+                new MapSqlParameterSource(of("name", book.getName(), "author_id", book.getAuthorId())), keyHolder, new String[]{"id"});
 
         long bookId = requireNonNull(keyHolder.getKey()).longValue();
 
@@ -71,14 +108,24 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> getAll() {
-        List<Book> books = namedParameterJdbcOperations.query("select id, name, author_id from books", new BookMapper());
+        Map<Long, Book> books = namedParameterJdbcOperations.query("select id, name, author_id from books", new BooksResultSetExtractor());
         List<BookGenreRelation> relations = namedParameterJdbcOperations.query("select book_id, genre_id from books_genres",
                 new BookGenreMapper());
         List<Genre> genres = genreDao.getAllUsed();
 
-        books.forEach(book -> book.setGenres(getGenresByBookId(genres, relations, book.getId())));
+        mergeBooksWithGenres(books, genres, relations);
 
-        return books;
+        return convertToList(books);
+    }
+
+    @Override
+    public List<Book> getAllInOneQuery() {
+        Map<Long, Book> books = namedParameterJdbcOperations.query("select b.id, b.name, b.author_id, " +
+                        "g.id as genre_id, g.name as genre_name from books b " +
+                        "left join books_genres bg on bg.book_id = b.id left join genres g on g.id = bg.genre_id",
+                new BooksWilAllDataResultSetExtractor());
+
+        return convertToList(books);
     }
 
     @Override
@@ -129,6 +176,10 @@ public class BookDaoJdbc implements BookDao {
         namedParameterJdbcOperations.batchUpdate("insert into books_genres (book_id,genre_id) values (:book_id, :genre_id)", batchValues);
     }
 
+    private List<Book> convertToList(Map<Long, Book> books) {
+        return requireNonNull(books).values().stream().toList();
+    }
+
     private void deleteOldRelationsWithGenres(long bookId) {
         namedParameterJdbcOperations.update("delete from books_genres where book_id = :book_id", singletonMap("book_id", bookId));
     }
@@ -142,16 +193,16 @@ public class BookDaoJdbc implements BookDao {
         return genreDao.getByIds(genresIds);
     }
 
-    private List<Genre> getGenresByBookId(List<Genre> genres, List<BookGenreRelation> relations, Long bookId) {
-        List<Long> currentBookGenresIds = relations
+    private void mergeBooksWithGenres(Map<Long, Book> books, List<Genre> genres, List<BookGenreRelation> relations) {
+        Map<Long, Genre> genresMap = genres
                 .stream()
-                .filter(bookGenreRelation -> bookGenreRelation.isBookIdEqual(bookId))
-                .map(BookGenreRelation::getGenreId)
-                .collect(toList());
+                .collect(toMap(Genre::getId, Function.identity()));
 
-        return genres
-                .stream()
-                .filter(genre -> currentBookGenresIds.contains(genre.getId()))
-                .collect(toList());
+        relations.forEach(relation ->
+                requireNonNull(books)
+                        .get(relation.getBookId())
+                        .getGenres()
+                        .add(genresMap.get(relation.getGenreId()))
+        );
     }
 }

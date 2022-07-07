@@ -3,6 +3,7 @@ package ru.otus.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,7 +14,7 @@ public class Book {
     private String name;
     private Long authorId;
 
-    private List<Genre> genres;
+    private List<Genre> genres = new ArrayList<>();
 
     public Book(Long id, String name, Long authorId) {
         this.id = id;
