@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    build: ./postgres
+    command: postgres
+    environment:
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: libraryDB
+    ports:
+      - "5430:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M

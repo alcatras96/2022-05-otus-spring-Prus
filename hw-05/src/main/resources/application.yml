@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5430/libraryDB
+    username: usr
+    password: pwd
+  flyway:
+    enabled: true
+  main:
+    allow-circular-references: true
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        jdbc:
+#          core: TRACE
