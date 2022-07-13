@@ -32,7 +32,6 @@ class CommentRepositoryJpaTest {
         Comment commentForInsert = new Comment(entityManager.getReference(Book.class, 1L), "comment text");
 
         commentRepository.insert(commentForInsert);
-        testEntityManager.clear();
 
         assertThat(commentRepository.getById(commentForInsert.getId()))
                 .usingRecursiveComparison()
@@ -60,13 +59,10 @@ class CommentRepositoryJpaTest {
     @DisplayName("Should update comment properly.")
     @Test
     void shouldUpdateCommentProperly() {
-        EntityManager entityManager = this.testEntityManager.getEntityManager();
-
-        Comment comment = new Comment(entityManager.getReference(Book.class, 1L), "comment 1 updated");
-        comment.setId(1L);
+        Comment comment = testEntityManager.find(Comment.class, 1L);
+        comment.setText("comment 1 updated");
 
         commentRepository.update(comment);
-        testEntityManager.flush();
 
         assertThat(commentRepository.getById(comment.getId()))
                 .usingRecursiveComparison()
@@ -81,7 +77,6 @@ class CommentRepositoryJpaTest {
         Long id = 1L;
 
         commentRepository.updateTextById(id, updatedText);
-        testEntityManager.clear();
 
         assertThat(commentRepository.getById(id))
                 .usingRecursiveComparison()

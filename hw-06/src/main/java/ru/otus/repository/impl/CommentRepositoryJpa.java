@@ -33,11 +33,11 @@ public class CommentRepositoryJpa implements CommentRepository {
     @Override
     public Comment getById(Long id) {
         try {
-            TypedQuery<Comment> query = entityManager.createQuery("select new Comment(c.id,b.name,c.text) " +
+            TypedQuery<Comment> query = entityManager.createQuery("select new Comment(c.id,b.id,b.name,c.text) " +
                     "from Comment c join c.book b where c.id = :id", Comment.class);
             query.setParameter("id", id);
             return query.getSingleResult();
-        } catch (NoResultException ex){
+        } catch (NoResultException ex) {
             return null;
         }
     }

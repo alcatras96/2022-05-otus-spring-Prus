@@ -14,7 +14,7 @@ create table books
 (
     id        bigserial primary key,
     name      varchar(255) not null,
-    author_id bigint references authors (id) on delete cascade
+    author_id bigint references authors (id) on delete cascade not null
 );
 
 create table books_genres

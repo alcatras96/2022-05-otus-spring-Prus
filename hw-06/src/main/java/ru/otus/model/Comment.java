@@ -39,6 +39,15 @@ public class Comment {
         this.text = text;
     }
 
+    public Comment(Long id, Long bookId, String bookName, String text) {
+        this.id = id;
+        this.book = Book.builder()
+                .id(bookId)
+                .name(bookName)
+                .build();
+        this.text = text;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

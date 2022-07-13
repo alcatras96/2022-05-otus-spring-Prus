@@ -40,23 +40,24 @@ class BookRepositoryJpaTest {
     @DisplayName("Should correctly insert a book with relations.")
     @Test
     void shouldInsertBook() {
-        EntityManager entityManager = this.testEntityManager.getEntityManager();
+        EntityManager entityManager = testEntityManager.getEntityManager();
         List<Genre> genres = of(
-                entityManager.getReference(Genre.class, 1L),
-                entityManager.getReference(Genre.class, 2L)
+                entityManager.find(Genre.class, 1L),
+                entityManager.find(Genre.class, 2L)
         );
         Book book = Book.builder()
                 .name("book")
                 .genres(genres)
-                .author(entityManager.getReference(Author.class, 1L))
+                .author(entityManager.find(Author.class, 1L))
                 .build();
 
         bookRepository.insert(book);
+        testEntityManager.flush();
+        testEntityManager.clear();
 
-        assertThat(book)
+        assertThat(bookRepository.getById(book.getId()))
                 .usingRecursiveComparison()
-                .ignoringFields("genres")
-                .isEqualTo(bookRepository.getById(book.getId()));
+                .isEqualTo(book);
     }
 
     @DisplayName("Should throw an exception for incorrect relations when inserting a book.")
@@ -139,12 +140,14 @@ class BookRepositoryJpaTest {
     @DisplayName("Should update book properly.")
     @Test
     void shouldUpdateBookProperly() {
-        Book bookToUpdate = getPulpFictionBook();
+        Book bookToUpdate = testEntityManager.find(Book.class, getPulpFictionBook().getId());
 
         bookToUpdate.setName("Pulp fiction v2");
         bookToUpdate.setAuthor(new Author(2L));
 
         bookRepository.update(bookToUpdate);
+        testEntityManager.flush();
+        testEntityManager.clear();
 
         assertEquals(bookToUpdate, bookRepository.getById(1L));
     }

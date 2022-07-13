@@ -55,10 +55,12 @@ class GenreRepositoryJpaTest {
     @DisplayName("Should update genre properly.")
     @Test
     void shouldUpdateGenreProperly() {
-        Genre updatedGenre = new Genre(1L, "tragedy");
+        Genre updatedGenre = entityManager.find(Genre.class, 1L);
+        updatedGenre.setName("tragedy");
 
         genreRepository.update(updatedGenre);
         entityManager.flush();
+        entityManager.clear();
 
         assertThat(genreRepository.getById(1L))
                 .usingRecursiveComparison()
@@ -72,7 +74,6 @@ class GenreRepositoryJpaTest {
         Long id = 1L;
 
         genreRepository.updateNameById(id, updatedName);
-        entityManager.clear();
 
         assertThat(genreRepository.getById(id))
                 .usingRecursiveComparison()

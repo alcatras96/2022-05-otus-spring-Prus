@@ -59,6 +59,7 @@ class AuthorRepositoryJpaTest {
 
         authorRepository.update(updatedAuthor);
         entityManager.flush();
+        entityManager.clear();
 
         assertThat(updatedAuthor)
                 .usingRecursiveComparison()
@@ -72,7 +73,6 @@ class AuthorRepositoryJpaTest {
         Long id = 1L;
 
         authorRepository.updateFullNameById(id, updatedFullName);
-        entityManager.clear();
 
         assertThat(authorRepository.getById(id))
                 .usingRecursiveComparison()
