@@ -1,12 +1,16 @@
 package ru.otus.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.model.Book;
 import ru.otus.model.Comment;
+import ru.otus.repository.api.BookRepository;
 import ru.otus.repository.api.CommentRepository;
 import ru.otus.service.api.CommentsService;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -14,6 +18,7 @@ import java.util.List;
 public class CommentsServiceJpa implements CommentsService {
 
     private final CommentRepository commentRepository;
+    private final BookRepository bookRepository;
 
     @Transactional
     @Override
@@ -30,6 +35,18 @@ public class CommentsServiceJpa implements CommentsService {
         } else {
             return commentRepository.update(comment);
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Comment> getCommentsByBookId(Long id) {
+        Book book = bookRepository.getById(id);
+        List<Comment> comments = Collections.emptyList();
+        if (book != null) {
+            comments = book.getComments();
+            Hibernate.initialize(comments);
+        }
+        return comments;
     }
 
     @Transactional(readOnly = true)

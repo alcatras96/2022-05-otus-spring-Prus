@@ -57,6 +57,7 @@ class BookRepositoryJpaTest {
 
         assertThat(bookRepository.getById(book.getId()))
                 .usingRecursiveComparison()
+                .ignoringFields("comments")
                 .isEqualTo(book);
     }
 
@@ -112,6 +113,7 @@ class BookRepositoryJpaTest {
     void shouldReturnExpectedBooksList() {
         assertThat(bookRepository.getAll())
                 .usingRecursiveComparison()
+                .ignoringFields("comments")
                 .isEqualTo(getExpectedBooksList());
     }
 
@@ -126,7 +128,10 @@ class BookRepositoryJpaTest {
         Statistics statistics = sessionFactory.getStatistics();
         statistics.setStatisticsEnabled(true);
 
-        assertThat(bookRepository.getAll()).usingRecursiveComparison().isEqualTo(getExpectedBooksList());
+        assertThat(bookRepository.getAll())
+                .usingRecursiveComparison()
+                .ignoringFields("comments")
+                .isEqualTo(getExpectedBooksList());
 
         assertThat(statistics.getPrepareStatementCount()).isEqualTo(2);
     }

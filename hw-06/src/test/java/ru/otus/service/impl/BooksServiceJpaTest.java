@@ -70,6 +70,7 @@ class BooksServiceJpaTest {
 
         assertThat(booksService.getById(1L))
                 .usingRecursiveComparison()
+                .ignoringFields("comments")
                 .isEqualTo(expectedBook);
     }
 

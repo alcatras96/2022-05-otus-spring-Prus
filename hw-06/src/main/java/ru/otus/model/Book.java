@@ -38,6 +38,10 @@ public class Book {
     @ToString.Exclude
     private List<Genre> genres;
 
+    @OneToMany(mappedBy="book")
+    @ToString.Exclude
+    public List<Comment> comments;
+
     public Book(Long id) {
         this.id = id;
     }
@@ -47,6 +51,13 @@ public class Book {
     }
 
     public Book(String name, Author author, List<Genre> genres) {
+        this.name = name;
+        this.author = author;
+        this.genres = genres;
+    }
+
+    public Book(Long id, String name, Author author, List<Genre> genres) {
+        this.id = id;
         this.name = name;
         this.author = author;
         this.genres = genres;

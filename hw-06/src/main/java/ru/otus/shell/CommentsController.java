@@ -27,6 +27,11 @@ public class CommentsController {
         return commentViewConverter.convert(commentsService.getById(id));
     }
 
+    @ShellMethod(value = "Get comments by book id command", key = {"get_comment_by_book_id"})
+    public String getByBookId(@ShellOption Long id) {
+        return commentViewConverter.convert(commentsService.getCommentsByBookId(id), System.lineSeparator());
+    }
+
     @ShellMethod(value = "Create comment command", key = {"create_comment"})
     public void create(@ShellOption String value, Long bookId) {
         commentsService.save(commentMapper.map(value, bookId));
