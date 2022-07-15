@@ -77,11 +77,13 @@ class CommentRepositoryJpaTest {
         Long id = 1L;
 
         commentRepository.updateTextById(id, updatedText);
+        testEntityManager.flush();
+        testEntityManager.clear();
 
         assertThat(commentRepository.getById(id))
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
-                .isEqualTo(new Comment(id, "Pulp fiction", updatedText));
+                .isEqualTo(new Comment(id, 1L, "Pulp fiction", updatedText));
     }
 
     @DisplayName("Should delete comment by id.")
@@ -90,7 +92,6 @@ class CommentRepositoryJpaTest {
         Long id = 1L;
         assertThat(commentRepository.getById(id)).isNotNull();
         commentRepository.deleteById(id);
-        testEntityManager.clear();
         assertThat(commentRepository.getById(id)).isNull();
     }
 

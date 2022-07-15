@@ -21,7 +21,7 @@ class AuthorRepositoryJpaTest {
     private AuthorRepositoryJpa authorRepository;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private TestEntityManager testEntityManager;
 
     @DisplayName("Should insert author.")
     @Test
@@ -29,7 +29,7 @@ class AuthorRepositoryJpaTest {
         Author authorToInsert = new Author("Maxim Maximovich Maximov");
 
         authorRepository.insert(authorToInsert);
-        entityManager.clear();
+        testEntityManager.clear();
 
         assertThat(authorRepository.getById(authorToInsert.getId()))
                 .usingRecursiveComparison()
@@ -58,8 +58,8 @@ class AuthorRepositoryJpaTest {
         Author updatedAuthor = new Author(1L, "Ivan Ivanovich Alexandrov");
 
         authorRepository.update(updatedAuthor);
-        entityManager.flush();
-        entityManager.clear();
+        testEntityManager.flush();
+        testEntityManager.clear();
 
         assertThat(updatedAuthor)
                 .usingRecursiveComparison()
@@ -73,6 +73,8 @@ class AuthorRepositoryJpaTest {
         Long id = 1L;
 
         authorRepository.updateFullNameById(id, updatedFullName);
+        testEntityManager.flush();
+        testEntityManager.clear();
 
         assertThat(authorRepository.getById(id))
                 .usingRecursiveComparison()
@@ -85,7 +87,7 @@ class AuthorRepositoryJpaTest {
         Long id = 1L;
         assertThat(authorRepository.getById(id)).isNotNull();
         authorRepository.deleteById(id);
-        entityManager.clear();
+        testEntityManager.flush();
         assertThat(authorRepository.getById(id)).isNull();
     }
 

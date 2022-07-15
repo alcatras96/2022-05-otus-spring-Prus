@@ -1,23 +1,20 @@
 package ru.otus.repository.impl;
 
-import lombok.AllArgsConstructor;
-import org.hibernate.Hibernate;
-import org.springframework.stereotype.Service;
-import ru.otus.model.Author;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import ru.otus.model.Book;
-import ru.otus.model.Genre;
 import ru.otus.repository.api.BookRepository;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Service
-@AllArgsConstructor
+@Repository
+@RequiredArgsConstructor
 public class BookRepositoryJpa implements BookRepository {
 
+    @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
@@ -48,16 +45,12 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public void updateName(Long id, String name) {
-        Query query = entityManager.createQuery("update Book b set b.name = :name where b.id = :id");
-        query.setParameter("name", name);
-        query.setParameter("id", id);
-        query.executeUpdate();
+        Book book = getById(id);
+        book.setName(name);
     }
 
     @Override
     public void deleteById(Long id) {
-        Query query = entityManager.createQuery("delete from Book b where b.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        entityManager.remove(getById(id));
     }
 }

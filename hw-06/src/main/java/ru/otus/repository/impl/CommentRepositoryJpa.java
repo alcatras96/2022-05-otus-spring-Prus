@@ -1,28 +1,26 @@
 package ru.otus.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.otus.model.Comment;
 import ru.otus.repository.api.CommentRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Service
+@Repository
 @RequiredArgsConstructor
 public class CommentRepositoryJpa implements CommentRepository {
 
+    @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
     public void updateTextById(Long id, String value) {
-        Query query = entityManager.createQuery("update Comment c set c.text = :value where c.id = :id");
-        query.setParameter("value", value);
-        query.setParameter("id", id);
-        query.executeUpdate();
+        Comment comment = getById(id);
+        comment.setText(value);
     }
 
     @Override
@@ -32,14 +30,7 @@ public class CommentRepositoryJpa implements CommentRepository {
 
     @Override
     public Comment getById(Long id) {
-        try {
-            TypedQuery<Comment> query = entityManager.createQuery("select new Comment(c.id,b.id,b.name,c.text) " +
-                    "from Comment c join c.book b where c.id = :id", Comment.class);
-            query.setParameter("id", id);
-            return query.getSingleResult();
-        } catch (NoResultException ex) {
-            return null;
-        }
+        return entityManager.find(Comment.class, id);
     }
 
     @Override
@@ -61,8 +52,6 @@ public class CommentRepositoryJpa implements CommentRepository {
 
     @Override
     public void deleteById(Long id) {
-        Query query = entityManager.createQuery("delete from Comment c where c.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        entityManager.remove(getById(id));
     }
 }

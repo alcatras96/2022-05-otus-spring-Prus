@@ -10,7 +10,6 @@ import ru.otus.service.api.GenresService;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class GenresServiceJpa implements GenresService {
 
@@ -27,11 +26,13 @@ public class GenresServiceJpa implements GenresService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Genre getById(Long id) {
         return genreRepository.getById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Genre> getAll() {
         return genreRepository.getAll();

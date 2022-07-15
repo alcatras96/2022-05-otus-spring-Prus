@@ -1,19 +1,20 @@
 package ru.otus.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.otus.model.Author;
 import ru.otus.repository.api.AuthorRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Service
+@Repository
 @RequiredArgsConstructor
 public class AuthorRepositoryJpa implements AuthorRepository {
 
+    @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
@@ -44,18 +45,12 @@ public class AuthorRepositoryJpa implements AuthorRepository {
 
     @Override
     public void updateFullNameById(Long id, String fullName) {
-        Query query = entityManager.createQuery("update Author a " +
-                "set a.fullName = :fullName " +
-                "where a.id = :id");
-        query.setParameter("fullName", fullName);
-        query.setParameter("id", id);
-        query.executeUpdate();
+        Author author = getById(id);
+        author.setFullName(fullName);
     }
 
     @Override
     public void deleteById(Long id) {
-        Query query = entityManager.createQuery("delete from Author a where a.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        entityManager.remove(getById(id));
     }
 }

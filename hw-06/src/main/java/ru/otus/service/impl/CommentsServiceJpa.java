@@ -10,7 +10,6 @@ import ru.otus.service.api.CommentsService;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentsServiceJpa implements CommentsService {
 
@@ -33,11 +32,13 @@ public class CommentsServiceJpa implements CommentsService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Comment getById(Long id) {
         return commentRepository.getById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Comment> getAll() {
         return commentRepository.getAll();

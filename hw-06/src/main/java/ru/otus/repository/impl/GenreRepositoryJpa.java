@@ -1,19 +1,20 @@
 package ru.otus.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.otus.model.Genre;
 import ru.otus.repository.api.GenreRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Service
+@Repository
 @RequiredArgsConstructor
 public class GenreRepositoryJpa implements GenreRepository {
 
+    @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
@@ -44,16 +45,12 @@ public class GenreRepositoryJpa implements GenreRepository {
 
     @Override
     public void deleteById(Long id) {
-        Query query = entityManager.createQuery("delete from Genre g where g.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        entityManager.remove(getById(id));
     }
 
     @Override
     public void updateNameById(Long id, String name) {
-        Query query = entityManager.createQuery("update Genre g set g.name = :name where g.id = :id");
-        query.setParameter("name", name);
-        query.setParameter("id", id);
-        query.executeUpdate();
+        Genre genre = getById(id);
+        genre.setName(name);
     }
 }

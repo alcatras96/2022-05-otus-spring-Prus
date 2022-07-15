@@ -21,7 +21,7 @@ class GenreRepositoryJpaTest {
     private GenreRepositoryJpa genreRepository;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private TestEntityManager testEntityManager;
 
     @DisplayName("Should insert genre.")
     @Test
@@ -29,7 +29,7 @@ class GenreRepositoryJpaTest {
         Genre genreToInsert = new Genre("test genre");
 
         genreRepository.insert(genreToInsert);
-        entityManager.clear();
+        testEntityManager.clear();
 
         assertThat(genreRepository.getById(genreToInsert.getId()))
                 .usingRecursiveComparison()
@@ -55,12 +55,12 @@ class GenreRepositoryJpaTest {
     @DisplayName("Should update genre properly.")
     @Test
     void shouldUpdateGenreProperly() {
-        Genre updatedGenre = entityManager.find(Genre.class, 1L);
+        Genre updatedGenre = testEntityManager.find(Genre.class, 1L);
         updatedGenre.setName("tragedy");
 
         genreRepository.update(updatedGenre);
-        entityManager.flush();
-        entityManager.clear();
+        testEntityManager.flush();
+        testEntityManager.clear();
 
         assertThat(genreRepository.getById(1L))
                 .usingRecursiveComparison()
@@ -74,6 +74,8 @@ class GenreRepositoryJpaTest {
         Long id = 1L;
 
         genreRepository.updateNameById(id, updatedName);
+        testEntityManager.flush();
+        testEntityManager.clear();
 
         assertThat(genreRepository.getById(id))
                 .usingRecursiveComparison()
@@ -86,7 +88,7 @@ class GenreRepositoryJpaTest {
         Long id = 1L;
         assertThat(genreRepository.getById(id)).isNotNull();
         genreRepository.deleteById(id);
-        entityManager.clear();
+        testEntityManager.flush();
         assertThat(genreRepository.getById(id)).isNull();
     }
 

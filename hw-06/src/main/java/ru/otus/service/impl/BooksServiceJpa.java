@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import static java.util.Optional.ofNullable;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BooksServiceJpa implements BooksService {
 
@@ -41,6 +40,7 @@ public class BooksServiceJpa implements BooksService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Book getById(Long id) {
         Book book = bookRepository.getById(id);
@@ -50,6 +50,7 @@ public class BooksServiceJpa implements BooksService {
         return book;
     }
 
+    @Transactional(readOnly = true)
     @LogExecutionTime
     @Override
     public List<Book> getAll() {

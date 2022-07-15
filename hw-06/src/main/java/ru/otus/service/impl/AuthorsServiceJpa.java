@@ -2,6 +2,7 @@ package ru.otus.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.model.Author;
 import ru.otus.repository.api.AuthorRepository;
@@ -10,7 +11,6 @@ import ru.otus.service.api.AuthorsService;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthorsServiceJpa implements AuthorsService {
 
@@ -27,11 +27,13 @@ public class AuthorsServiceJpa implements AuthorsService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Author getById(Long id) {
         return authorRepository.getById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Author> getAll() {
         return authorRepository.getAll();

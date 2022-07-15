@@ -160,6 +160,9 @@ class BookRepositoryJpaTest {
         expectedBook.setName("Pulp fiction v2");
 
         bookRepository.updateName(expectedBook.getId(), expectedBook.getName());
+        testEntityManager.flush();
+        testEntityManager.clear();
+
         assertEquals(expectedBook, bookRepository.getById(expectedBook.getId()));
     }
 
@@ -169,7 +172,7 @@ class BookRepositoryJpaTest {
         Long id = 1L;
         assertThat(bookRepository.getById(id)).isNotNull();
         bookRepository.deleteById(id);
-        testEntityManager.clear();
+        testEntityManager.flush();
         assertThat(bookRepository.getById(id)).isNull();
     }
 
