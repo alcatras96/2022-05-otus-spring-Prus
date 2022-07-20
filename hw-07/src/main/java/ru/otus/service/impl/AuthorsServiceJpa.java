@@ -16,19 +16,16 @@ public class AuthorsServiceJpa implements AuthorsService {
 
     private final AuthorRepository authorRepository;
 
-    @Transactional
     @Override
     public Author save(Author author) {
         return authorRepository.save(author);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Optional<Author> getById(Long id) {
         return authorRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<Author> getAll() {
         return authorRepository.findAll();
@@ -42,7 +39,6 @@ public class AuthorsServiceJpa implements AuthorsService {
         authorOptional.orElseThrow().setFullName(fullName);
     }
 
-    @Transactional
     @Override
     public void deleteById(Long id) {
         authorRepository.deleteById(id);

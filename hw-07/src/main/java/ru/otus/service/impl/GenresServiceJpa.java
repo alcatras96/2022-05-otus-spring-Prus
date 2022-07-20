@@ -16,19 +16,16 @@ public class GenresServiceJpa implements GenresService {
 
     private final GenreRepository genreRepository;
 
-    @Transactional
     @Override
     public Genre save(Genre genre) {
         return genreRepository.save(genre);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Optional<Genre> getById(Long id) {
         return genreRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<Genre> getAll() {
         return genreRepository.findAll();
@@ -41,7 +38,6 @@ public class GenresServiceJpa implements GenresService {
         genreOptional.orElseThrow().setName(name);
     }
 
-    @Transactional
     @Override
     public void deleteById(Long id) {
         genreRepository.deleteById(id);

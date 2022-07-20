@@ -18,7 +18,6 @@ public class BooksServiceJpa implements BooksService {
 
     private final BookRepository bookRepository;
 
-    @Transactional
     @Override
     public Book save(Book book) {
         return bookRepository.save(book);
@@ -53,7 +52,6 @@ public class BooksServiceJpa implements BooksService {
         bookOptional.orElseThrow().setName(name);
     }
 
-    @Transactional
     @Override
     public void deleteById(Long id) {
         bookRepository.deleteById(id);

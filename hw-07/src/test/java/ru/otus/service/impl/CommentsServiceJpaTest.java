@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.model.Comment;
 
 import java.util.List;
@@ -20,24 +22,23 @@ class CommentsServiceJpaTest {
     @Autowired
     private CommentsServiceJpa commentsService;
 
-    @Autowired
-    private TestEntityManager testEntityManager;
-
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName("Should update comment text.")
     @Test
     void shouldUpdateCommentText() {
-        String updatedText = "comment 1 updated";
-        Long id = 1L;
+        var updatedText = "comment 1 updated";
+        var id = 1L;
+        var originalText = commentsService.getById(id).orElseThrow().getText();
 
         commentsService.updateTextById(id, updatedText);
-        testEntityManager.flush();
-        testEntityManager.clear();
 
         assertThat(commentsService.getById(id))
                 .get()
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
                 .isEqualTo(new Comment(id, 1L, "Pulp fiction", updatedText));
+
+        commentsService.updateTextById(id, originalText);
     }
 
     @DisplayName("Should return expected comments by book id.")

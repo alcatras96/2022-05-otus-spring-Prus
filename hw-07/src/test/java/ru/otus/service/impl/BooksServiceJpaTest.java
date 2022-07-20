@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +28,6 @@ class BooksServiceJpaTest {
     @Autowired
     private BooksServiceJpa booksService;
 
-    @Autowired
-    private TestEntityManager testEntityManager;
-
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName("Should rollback transaction when inserting book with incorrect relations.")
     @ParameterizedTest
@@ -47,19 +43,25 @@ class BooksServiceJpaTest {
                 .isEqualTo(expectedBook);
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName("Should update book name.")
     @Test
     void shouldUpdateBookName() {
-        Long id = 1L;
-        Book expectedBook = booksService.getById(id).orElseThrow();
-        testEntityManager.clear();
-        expectedBook.setName("Pulp fiction v2");
+        var id = 1L;
+        var updatedName = "Pulp fiction v2";
+        var expectedBook = booksService.getById(id).orElseThrow();
+        var originalName = expectedBook.getName();
+        expectedBook.setName(updatedName);
 
-        booksService.updateNameById(id, expectedBook.getName());
-        testEntityManager.flush();
-        testEntityManager.clear();
+        booksService.updateNameById(id, updatedName);
 
-        assertThat(booksService.getById(id)).get().isEqualTo(expectedBook);
+        assertThat(booksService.getById(id))
+                .get()
+                .usingRecursiveComparison()
+                .ignoringFields("comments")
+                .isEqualTo(expectedBook);
+
+        booksService.updateNameById(id, originalName);
     }
 
 

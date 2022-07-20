@@ -4,8 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.model.Genre;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,24 +18,21 @@ class GenresServiceJpaTest {
     @Autowired
     private GenresServiceJpa genresService;
 
-    @Autowired
-    private TestEntityManager testEntityManager;
-
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName("Should update genre name.")
     @Test
     void shouldUpdateGenreName() {
         var id = 1L;
-        var expectedGenre = testEntityManager.find(Genre.class, 1L);
-        expectedGenre.setName("tragedy");
-        testEntityManager.clear();
+        var updatedName = "tragedy";
+        var originalName = genresService.getById(id).orElseThrow().getName();
 
-        genresService.updateNameById(id, expectedGenre.getName());
-        testEntityManager.flush();
-        testEntityManager.clear();
+        genresService.updateNameById(id, updatedName);
 
         assertThat(genresService.getById(id))
                 .get()
                 .usingRecursiveComparison()
-                .isEqualTo(expectedGenre);
+                .isEqualTo(new Genre(1L, updatedName));
+
+        genresService.updateNameById(id, originalName);
     }
 }

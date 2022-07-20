@@ -27,19 +27,16 @@ public class CommentsServiceJpa implements CommentsService {
         commentOptional.orElseThrow().setText(value);
     }
 
-    @Transactional
     @Override
     public Comment save(Comment comment) {
         return commentRepository.save(comment);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Optional<Comment> getById(Long id) {
         return commentRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<Comment> getAll() {
         return commentRepository.findAll();
@@ -57,7 +54,6 @@ public class CommentsServiceJpa implements CommentsService {
         return comments;
     }
 
-    @Transactional
     @Override
     public void deleteById(Long id) {
         commentRepository.deleteById(id);
