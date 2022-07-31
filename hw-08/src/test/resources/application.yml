@@ -4,6 +4,9 @@ time:
       enabled: true
 
 spring:
+  shell:
+    interactive:
+      enabled: false
   mongodb:
     embedded:
       version: 4.4.11
@@ -12,9 +15,9 @@ spring:
       database: libraryDB
   main:
     allow-circular-references: true
+    lazy-initialization: true
 
 mongock:
-  runner-type: "InitializingBean"
   change-logs-scan-package:
     - ru.otus.mongock.changelog.DatabaseChangelogForTests
 

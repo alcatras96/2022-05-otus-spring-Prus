@@ -39,6 +39,6 @@ public class GenresServiceMongo implements GenresService {
 
     @Override
     public void deleteById(String id) {
-        genreRepository.deleteById(id);
+        genreRepository.deleteByIdWithRelations(id);
     }
 }

@@ -44,6 +44,6 @@ public class AuthorsServiceMongo implements AuthorsService {
 
     @Override
     public void deleteById(String id) {
-        authorRepository.deleteById(id);
+        authorRepository.deleteByIdWithRelations(id);
     }
 }

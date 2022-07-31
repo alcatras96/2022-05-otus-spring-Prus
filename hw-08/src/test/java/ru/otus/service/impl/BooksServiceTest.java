@@ -3,8 +3,7 @@ package ru.otus.service.impl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.model.Comment;
 
 import java.util.List;
@@ -12,8 +11,7 @@ import java.util.List;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataMongoTest
-@Import(BooksServiceMongo.class)
+@SpringBootTest
 class BooksServiceTest {
 
     @Autowired

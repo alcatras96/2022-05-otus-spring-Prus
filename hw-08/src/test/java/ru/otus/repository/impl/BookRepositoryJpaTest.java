@@ -1,10 +1,13 @@
 package ru.otus.repository.impl;
 
+import com.github.cloudyrock.spring.v5.MongockSpring5;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import ru.otus.model.Author;
 import ru.otus.model.Book;
 import ru.otus.model.Genre;
@@ -17,7 +20,7 @@ import java.util.List;
 import static java.util.List.of;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataMongoTest
+@SpringBootTest
 class BookRepositoryJpaTest {
 
     @Autowired

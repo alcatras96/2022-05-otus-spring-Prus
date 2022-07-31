@@ -3,20 +3,25 @@ package ru.otus.repository.impl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.model.Author;
+import ru.otus.model.Book;
 import ru.otus.repository.api.AuthorRepository;
+import ru.otus.repository.api.BookRepository;
 
 import java.util.List;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataMongoTest
+@SpringBootTest
 class AuthorRepositoryJpaTest {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @DisplayName("Should insert author.")
     @Test
@@ -66,15 +71,17 @@ class AuthorRepositoryJpaTest {
         authorRepository.deleteById(author.getId());
     }
 
-    @DisplayName("Should delete author by id.")
+    @DisplayName("Should delete author by id with all relations.")
     @Test
     void shouldDeleteAuthorById() {
         var author = authorRepository.save(new Author("author 123"));
+        var book = bookRepository.save(Book.builder().name("book 123").author(author).build());
 
         var authorFromDB = authorRepository.findById(author.getId());
         assertThat(authorFromDB).isPresent();
-        authorRepository.deleteById(authorFromDB.get().getId());
+        authorRepository.deleteByIdWithRelations(authorFromDB.get().getId());
         assertThat(authorRepository.findById(author.getId())).isNotPresent();
+        assertThat(bookRepository.findById(book.getId())).isNotPresent();
     }
 
     private List<Author> getExpectedAuthorsList() {

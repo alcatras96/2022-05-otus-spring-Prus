@@ -4,8 +4,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.otus.model.Book;
 import ru.otus.model.Genre;
+import ru.otus.repository.api.BookRepository;
 import ru.otus.repository.api.GenreRepository;
 
 import java.util.List;
@@ -13,11 +15,14 @@ import java.util.List;
 import static java.util.List.of;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataMongoTest
+@SpringBootTest
 class GenreRepositoryJpaTest {
 
     @Autowired
     private GenreRepository genreRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @DisplayName("Should insert genre.")
     @Test
@@ -69,15 +74,16 @@ class GenreRepositoryJpaTest {
         genreRepository.deleteById(genre.getId());
     }
 
-    @DisplayName("Should delete genre by id.")
+    @DisplayName("Should delete genre by id with all relations.")
     @Test
     void shouldDeleteGenreById() {
         var genre = genreRepository.save(new Genre("genre 123"));
+        var book = bookRepository.save(Book.builder().name("book 123").genres(of(genre)).build());
 
-        var authorFromDB = genreRepository.findById(genre.getId());
-        Assertions.assertThat(authorFromDB).isPresent();
-        genreRepository.deleteById(authorFromDB.get().getId());
+        Assertions.assertThat(genreRepository.findById(genre.getId())).isPresent();
+        genreRepository.deleteByIdWithRelations(genre.getId());
         Assertions.assertThat(genreRepository.findById(genre.getId())).isNotPresent();
+        Assertions.assertThat(bookRepository.findById(book.getId())).isNotPresent();
     }
 
     private List<Genre> getExpectedGenresList() {
