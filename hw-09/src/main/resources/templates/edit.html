@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="edit-book-form" th:method="post" th:action="${param.id == null} ? '/book/new' : '/book/name'" th:object="${book}">
+    <h3>Book Info:</h3>
+    <div th:if="${param.id != null}" class="row" id="book-id-section">
+        <label for="id-input">ID:</label>
+        <input type="text" readonly="readonly" th:value="*{id}" id="id-input" name="id"/>
+    </div>
+
+    <div th:if="${param.id == null}">
+        <label for="genres">Choose a genre:</label>
+        <select id="genres" form="edit-book-form" th:field="*{genreIds}" multiple required>
+            <option th:each="genre : ${genres}"
+                    th:value="${genre.id}"
+                    th:text="${genre.name}">
+            </option>
+        </select>
+
+        <div class="row">
+            <label for="authorName">Author:</label>
+            <input type="text" th:value="*{authorName}" id="authorName" name="authorName" required/>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="book-name-input">Name:</label>
+        <input id="book-name-input" name="name" type="text" th:value="*{name}" required/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="list.html" th:href="@{/}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+
+
+<form th:if="${param.id != null}" id="add-book-comment-form" th:method="post" th:action="@{/book/comment}" th:object="${newComment}">
+    <h2>Add a comment:</h2>
+    <div class="row">
+        <label for="book-new-comment-input">Text:</label>
+        <input type="hidden" th:value="${book.id}" name="bookId"/>
+        <input id="book-new-comment-input" name="commentText" type="text" th:value="*{commentText}" required/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
+</body>
+</html>
