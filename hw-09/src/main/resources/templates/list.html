@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+    </style>
+</head>
+<body>
+<h3>Books:</h3>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Author</th>
+        <th>Genres</th>
+        <th>Comments</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--/*@thymesVar id="book" type="ru.otus.dto.BookDto"*/-->
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.name}"></td>
+        <td th:text="${book.authorName}"></td>
+        <td>
+            <div th:each="genre : ${book.genres}">
+                <p th:text="${genre}"></p>
+            </div>
+        </td>
+        <td>
+            <div th:each="comment : ${book.comments}">
+                <p th:text="${comment}"></p>
+            </div>
+        </td>
+        <td>
+            <a th:href="@{/book/edit(id=${book.id})}">Edit</a>
+            <br/>
+            <form th:action="@{/book/delete}" th:object="${editableBookId}" method="post">
+                <input type="hidden" th:value="${book.id}" name="id"/>
+                <button type="submit">Delete</button>
+            </form>
+            <br/>
+            <form th:action="@{/book/comment/delete}" th:object="${editableBookId}" method="post">
+                <input type="hidden" th:value="${book.id}" name="id"/>
+                <button type="submit">Delete comments</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/book/edit}">Add new book</a>
+
+</body>
+</html>
