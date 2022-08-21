@@ -1,0 +1,46 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<table class="table">
+    <thead class="table-dark">
+    <tr>
+        <th scope="col" class="text-center">ID</th>
+        <th scope="col" class="text-center">Name</th>
+        <th scope="col" class="text-center">Author</th>
+        <th scope="col" class="text-center">Genres</th>
+        <th scope="col" class="text-center">Comments</th>
+        <th scope="col" class="text-center">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let book of books">
+        <td>{{book.id}}</td>
+        <td>{{book.name}}</td>
+        <td>{{book.authorName}}</td>
+        <td>
+            <div *ngFor="let genre of book.genres">
+                {{genre.name}}
+            </div>
+        </td>
+        <td>
+            <div *ngFor="let comment of book.comments">
+                {{comment}}
+            </div>
+        </td>
+        <td>
+            <div>
+                <button type="button" class="btn btn-outline-primary"
+                        [routerLink]="['/edit']" [queryParams]="{id: book.id}">Edit
+                </button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-primary" (click)="deleteBook(book)">Delete</button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-primary" (click)="deleteComments(book)">Delete comments</button>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<button type="button" class="btn btn-outline-primary" routerLink="/edit">Add new book</button>
