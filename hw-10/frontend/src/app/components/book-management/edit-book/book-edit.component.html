@@ -1,0 +1,36 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<form [formGroup]="booksForm">
+    <div class="form-group" *ngIf="!creationFlow">
+        <label for="bookId">ID</label>
+        <input formControlName="id" type="text" class="form-control" id="bookId" readonly>
+    </div>
+    <div class="form-group">
+        <label for="inputBookName">Name</label>
+        <input formControlName="name" type="text" class="form-control" id="inputBookName" placeholder="Enter book name">
+    </div>
+    <ng-container *ngIf="creationFlow">
+        <div class="form-group">
+            <label for="inputBookAuthor">Author</label>
+            <input formControlName="authorName" type="text" class="form-control" id="inputBookAuthor" placeholder="Enter author name">
+        </div>
+        <div class="form-group">
+            <label for="selectGenres">Genres</label>
+            <select formControlName="genres" multiple class="form-control" id="selectGenres">
+                <option *ngFor="let genre of genres" [ngValue]="genre">{{genre.name}}</option>
+            </select>
+        </div>
+    </ng-container>
+    <button [disabled]="booksForm.invalid" type="submit" class="btn btn-primary" (click)="creationFlow ? addBook() : saveBookName()">
+        Submit
+    </button>
+</form>
+
+<form *ngIf="!creationFlow" [formGroup]="commentsForm">
+    <div class="form-group">
+        <label for="inputCommentText">Comment text</label>
+        <input formControlName="text" type="email" class="form-control" id="inputCommentText" placeholder="Enter comment text">
+        <small id="emailHelp" class="form-text text-muted">It will be added to this book.</small>
+    </div>
+    <button [disabled]="commentsForm.invalid" type="submit" class="btn btn-primary" (click)="addComment()">Submit</button>
+</form>
