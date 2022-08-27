@@ -1,0 +1,22 @@
+time:
+  measurement:
+    aspect:
+      enabled: true
+
+
+spring:
+  mongodb:
+    embedded:
+      version: 4.4.11
+  data:
+    mongodb:
+      database: libraryDB
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
