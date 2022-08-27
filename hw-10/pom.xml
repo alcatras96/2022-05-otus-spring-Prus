@@ -17,6 +17,6 @@
     </properties>
 
     <modules>
-        <module>backend</module>
+        <module>hw-10-backend</module>
     </modules>
 </project>
