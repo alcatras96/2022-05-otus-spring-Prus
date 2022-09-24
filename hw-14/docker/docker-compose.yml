@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: libraryDB
+    ports:
+      - "5430:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+  mongodb:
+    container_name: mongodb
+    hostname: mongodb
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin_user
+      MONGO_INITDB_ROOT_PASSWORD: admin_pass
+    ports:
+      - "27017:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M

@@ -14,9 +14,10 @@
     <groupId>ru.otus</groupId>
     <artifactId>2022-05-otus-spring-Prus</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>${project.version}</version>
 
     <properties>
+        <project.version>1.0</project.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -33,5 +34,6 @@
         <module>hw-09</module>
         <module>hw-10</module>
         <module>hw-11</module>
+        <module>hw-14</module>
     </modules>
 </project>

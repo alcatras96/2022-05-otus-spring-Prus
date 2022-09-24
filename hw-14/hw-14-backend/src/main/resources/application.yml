@@ -1,0 +1,24 @@
+time:
+  measurement:
+    aspect:
+      enabled: true
+
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      username: admin_user
+      password: admin_pass
+      database: libraryDB
+      authentication-database: admin
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
