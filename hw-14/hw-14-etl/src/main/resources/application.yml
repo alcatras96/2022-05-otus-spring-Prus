@@ -1,0 +1,39 @@
+time:
+  measurement:
+    aspect:
+      enabled: true
+
+spring:
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      username: admin_user
+      password: admin_pass
+      database: libraryDB
+      authentication-database: admin
+  datasource:
+    url: jdbc:postgresql://localhost:5430/libraryDB
+    username: usr
+    password: pwd
+  flyway:
+    enabled: true
+    user: usr
+    password: pwd
+    url: jdbc:postgresql://localhost:5430/libraryDB
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+server:
+  port: 8081
